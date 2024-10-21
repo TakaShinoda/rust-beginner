@@ -54,6 +54,25 @@ fn main() {
     // [1..3] -> 1以上、3未満の範囲
     let s: &[u32] = &arr[1..3]; // スライスを取得
     println!("{:?}", s);
+
+
+    let a: &str = "     Hello";
+    // コンパイルエラー
+    // a += ", world!";
+
+    let mut b: String = a.to_string();
+    b += ", world!";
+
+    let c: &str = b.trim();
+    println!("{c}");
+
+    let d = r##"これは
+    複数行の
+    文字列です"##;
+    println!("{d}");
+
+    do_if(add, 10, 2);
+    do_if(mul, 10, 2);
 }
 
 // fn a() -> bool {
@@ -69,3 +88,17 @@ fn main() {
 // fn mul(x: i32, y: i32) -> i32 {
 //   x * y
 // }
+
+// fn(u32, u32) -> u32 関数ポインタ型
+fn do_if(f: fn(u32, u32) -> u32, a: u32, b:u32) {
+  println!("{}", f(a, b));
+}
+
+fn add(a:u32, b:u32) -> u32 {
+  a + b
+}
+
+fn mul(a:u32, b:u32) -> u32 {
+  a * b
+}
+
