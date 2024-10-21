@@ -73,6 +73,17 @@ fn main() {
 
     do_if(add, 10, 2);
     do_if(mul, 10, 2);
+
+    // let hdd = Storage::HDD { size: 512, rpm: 7200 };
+    // let ssd = Storage::SSD(512);
+
+    let spec = PCSpec {
+      cpus: 8,
+      memory: 16,
+      storage: Storage::SSD(1024)
+    };
+
+    println!("{}", spec.cpus);
 }
 
 // fn a() -> bool {
@@ -102,3 +113,13 @@ fn mul(a:u32, b:u32) -> u32 {
   a * b
 }
 
+enum Storage {
+  HDD { size: u32, rpm: u32 },
+  SSD(u32)
+}
+
+struct PCSpec {
+  cpus: u16,
+  memory: u32,
+  storage: Storage
+}
