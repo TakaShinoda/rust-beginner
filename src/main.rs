@@ -191,7 +191,7 @@ fn sumup_while(mut n: u64) -> u64 {
   total
 }
 
-fn sumup_for(mut n: u64) -> u64 {
+fn sumup_for(n: u64) -> u64 {
   let mut total = 0;
   // 0 から n までの値が x に代入される
   for x in 0..=n {
