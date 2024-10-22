@@ -1,3 +1,5 @@
+use core::num;
+
 fn main() {
     // let x: i32 = 10;
     // let y = 20;
@@ -86,6 +88,23 @@ fn main() {
     println!("{}", spec.cpus);
 
     hello();
+
+    println!("{}",sumup(10));
+    println!("{}",sumup_loop(10));
+    println!("{}",sumup_while(10));
+    println!("{}",sumup_for(10));
+
+    let v = [3, 8, 11, 15];
+    let mut result = 0;
+    // iter() 配列の要素への不変参照が先頭から順に x に代入される
+    for x in v.iter() {
+      if *x % 2 == 0 {
+        continue;
+      }
+      result += *x;
+    }
+    println!("{}", result);
+
 }
 
 // fn a() -> bool {
@@ -141,4 +160,42 @@ fn hello () {
     msg2: "world!",
   };
   print_msg(&msg);
+}
+
+fn sumup(n: u64) -> u64 {
+  if n == 0 {
+    0
+  } else {
+    n + sumup(n - 1)
+  }
+}
+
+fn sumup_loop(mut n: u64) -> u64 {
+  let mut total = 0;
+  loop {
+    if n == 0 {
+      break;
+    }
+    total += n;
+    n -= 1;
+  }
+  total
+}
+
+fn sumup_while(mut n: u64) -> u64 {
+  let mut total = 0;
+  while n > 0 {
+    total += n;
+    n -= 1;
+  }
+  total
+}
+
+fn sumup_for(mut n: u64) -> u64 {
+  let mut total = 0;
+  // 0 から n までの値が x に代入される
+  for x in 0..=n {
+    total += x;
+  }
+  total
 }
