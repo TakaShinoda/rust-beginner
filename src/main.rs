@@ -134,6 +134,27 @@ fn main() {
     };
     println!("{:?}", s);
     println!("{:#?}", s);
+
+    // クロージャ
+    // | 引数| 式
+    let f = |a, b| a + b;
+    let n = f(5, 10);
+    println!("{n}");
+
+    let mut s = Storage::SSD(512);
+    let mut f = || match &mut s {
+        // s キャプチャ
+        Storage::HDD { size: s, .. } => *s += 64,
+        _ => (),
+    };
+    f();
+
+    // move
+    let mut g = move || match &mut s {
+        Storage::HDD { size: s, .. } => *s += 64,
+        _ => (),
+    };
+    g();
 }
 
 // fn a() -> bool {
