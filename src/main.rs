@@ -1,5 +1,3 @@
-use core::num;
-
 fn main() {
     // let x: i32 = 10;
     // let y = 20;
@@ -57,7 +55,6 @@ fn main() {
     let s: &[u32] = &arr[1..3]; // スライスを取得
     println!("{:?}", s);
 
-
     let a: &str = "     Hello";
     // コンパイルエラー
     // a += ", world!";
@@ -80,31 +77,52 @@ fn main() {
     // let ssd = Storage::SSD(512);
 
     let spec = PCSpec {
-      cpus: 8,
-      memory: 16,
-      storage: Storage::SSD(1024)
+        cpus: 8,
+        memory: 16,
+        storage: Storage::SSD(1024),
     };
 
     println!("{}", spec.cpus);
 
+    match &spec {
+        PCSpec {
+            storage: Storage::SSD(512), // 512GiB SSD
+            .. // 他のフィールドは無視
+        } => {
+            println!("512");
+        }
+        PCSpec {
+            cpus: 4 | 8, // 4 か 8
+            memory: m, // m にメモリサイズが代入される
+            storage: _, // storage の値は無視
+        } => {
+            println!("4 or 8 CPUs");
+            println!("{}GiB memory", *m);
+        }
+        PCSpec { memory: m, .. } if *m < 4 => {  // if 以降はガードと呼ばれる、この条件に合致したもののみがマッチ
+            println!("4 GiB より小さいメモリ");
+        }
+        // 全パターン
+        _ => (),
+    }
+
     hello();
 
-    println!("{}",sumup(10));
-    println!("{}",sumup_loop(10));
-    println!("{}",sumup_while(10));
-    println!("{}",sumup_for(10));
+    println!("{}", sumup(10));
+    println!("{}", sumup_loop(10));
+    println!("{}", sumup_while(10));
+    println!("{}", sumup_for(10));
 
     let v = [3, 8, 11, 15];
     let mut result = 0;
     // iter() 配列の要素への不変参照が先頭から順に x に代入される
     for x in v.iter() {
-      if *x % 2 == 0 {
-        continue;
-      }
-      result += *x;
+        if *x % 2 == 0 {
+            continue;
+        }
+        result += *x;
     }
     println!("{}", result);
-
 }
 
 // fn a() -> bool {
@@ -122,80 +140,80 @@ fn main() {
 // }
 
 // fn(u32, u32) -> u32 関数ポインタ型
-fn do_if(f: fn(u32, u32) -> u32, a: u32, b:u32) {
-  println!("{}", f(a, b));
+fn do_if(f: fn(u32, u32) -> u32, a: u32, b: u32) {
+    println!("{}", f(a, b));
 }
 
-fn add(a:u32, b:u32) -> u32 {
-  a + b
+fn add(a: u32, b: u32) -> u32 {
+    a + b
 }
 
-fn mul(a:u32, b:u32) -> u32 {
-  a * b
+fn mul(a: u32, b: u32) -> u32 {
+    a * b
 }
 
 enum Storage {
-  HDD { size: u32, rpm: u32 },
-  SSD(u32)
+    HDD { size: u32, rpm: u32 },
+    SSD(u32),
 }
 
 struct PCSpec {
-  cpus: u16,
-  memory: u32,
-  storage: Storage
+    cpus: u16,
+    memory: u32,
+    storage: Storage,
 }
 
-fn hello () {
-  struct Msg {
-    msg1: &'static str, // ライフタイム指定子
-    msg2: &'static str,
-  }
+fn hello() {
+    struct Msg {
+        msg1: &'static str, // ライフタイム指定子
+        msg2: &'static str,
+    }
 
-  fn print_msg(msg: &Msg) {
-    println!("{}{}", msg.msg1, msg.msg2);
-  }
+    fn print_msg(msg: &Msg) {
+        println!("{}{}", msg.msg1, msg.msg2);
+    }
 
-  let msg = Msg {
-    msg1: "Hello, ",
-    msg2: "world!",
-  };
-  print_msg(&msg);
+    let msg = Msg {
+        msg1: "Hello, ",
+        msg2: "world!",
+    };
+    print_msg(&msg);
 }
 
 fn sumup(n: u64) -> u64 {
-  if n == 0 {
-    0
-  } else {
-    n + sumup(n - 1)
-  }
+    if n == 0 {
+        0
+    } else {
+        n + sumup(n - 1)
+    }
 }
 
 fn sumup_loop(mut n: u64) -> u64 {
-  let mut total = 0;
-  loop {
-    if n == 0 {
-      break;
+    let mut total = 0;
+    loop {
+        if n == 0 {
+            break;
+        }
+        total += n;
+        n -= 1;
     }
-    total += n;
-    n -= 1;
-  }
-  total
+    total
 }
 
 fn sumup_while(mut n: u64) -> u64 {
-  let mut total = 0;
-  while n > 0 {
-    total += n;
-    n -= 1;
-  }
-  total
+    let mut total = 0;
+    while n > 0 {
+        total += n;
+        n -= 1;
+    }
+    total
 }
 
 fn sumup_for(n: u64) -> u64 {
-  let mut total = 0;
-  // 0 から n までの値が x に代入される
-  for x in 0..=n {
-    total += x;
-  }
-  total
+    let mut total = 0;
+    // 0 から n までの値が x に代入される
+    for x in 0..=n {
+        total += x;
+    }
+    total
 }
