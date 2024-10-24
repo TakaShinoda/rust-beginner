@@ -123,6 +123,10 @@ fn main() {
         result += *x;
     }
     println!("{}", result);
+
+    let arr: &[f32] = &[3.5, 5.2];
+    let total = average(arr);
+    println!("{:?}", total);
 }
 
 // fn a() -> bool {
@@ -216,4 +220,16 @@ fn sumup_for(n: u64) -> u64 {
         total += x;
     }
     total
+}
+
+fn average(v: &[f32]) -> Option<f32> {
+    if v.is_empty() {
+        return None;
+    }
+    let mut total = 0.0;
+    for n in v {
+        total += n;
+    }
+
+    Some(total / v.len() as f32)
 }
