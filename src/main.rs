@@ -127,6 +127,13 @@ fn main() {
     let arr: &[f32] = &[3.5, 5.2];
     let total = average(arr);
     println!("{:?}", total);
+
+    let s = Storage::HDD {
+        size: 2048,
+        rpm: 7200,
+    };
+    println!("{:?}", s);
+    println!("{:#?}", s);
 }
 
 // fn a() -> bool {
@@ -156,6 +163,7 @@ fn mul(a: u32, b: u32) -> u32 {
     a * b
 }
 
+#[derive(Debug)]
 enum Storage {
     HDD { size: u32, rpm: u32 },
     SSD(u32),
