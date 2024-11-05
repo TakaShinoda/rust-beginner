@@ -1,3 +1,5 @@
+use std::collections::LinkedList;
+
 fn main() {
     // let x: i32 = 10;
     // let y = 20;
@@ -172,6 +174,20 @@ fn main() {
     // 静的変数
     static A: u32 = 100;
     static mut B: u32 = 200;
+
+    let mut list1 = LinkedList::new();
+    list1.push_back(0);
+    list1.push_back(1);
+    list1.push_back(2);
+
+    let mut list2 = LinkedList::new();
+    list2.push_back(100);
+    list2.push_back(200);
+    list2.push_back(300);
+
+    list1.append(&mut list2); // list1 == [0, 1, 2, 100, 200, 300]、list2 == []
+
+    list1.push_front(-10);
 }
 
 // fn a() -> bool {
