@@ -155,6 +155,14 @@ fn main() {
         _ => (),
     };
     g();
+
+    // メソッド呼び出し
+    let mut s = Storage::SSD(512);
+    let size = s.get_size();
+
+    // 型関連関数の呼び出し
+    let s = Storage::SSD(512);
+    let spec = PCSpec::new(8, 32, s);
 }
 
 // fn a() -> bool {
@@ -261,4 +269,28 @@ fn average(v: &[f32]) -> Option<f32> {
     }
 
     Some(total / v.len() as f32)
+}
+
+// 型に特化した関数は impl を使って定義する
+// Storage 型の実装を定義
+// メソッド
+impl Storage {
+    // &self は self: &Storage と同じ
+    fn get_size(&self) -> u32 {
+        match self {
+            Storage::HDD { size: s, .. } => *s,
+            Self::SSD(s) => *s,
+        }
+    }
+}
+
+// impl 内の第一引数が self ではない関数は 型関連関数と呼ぶ
+impl PCSpec {
+    fn new(cpus: u16, memory: u32, storage: Storage) -> PCSpec {
+        PCSpec {
+            cpus,
+            memory,
+            storage,
+        }
+    }
 }
