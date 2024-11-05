@@ -163,6 +163,15 @@ fn main() {
     // 型関連関数の呼び出し
     let s = Storage::SSD(512);
     let spec = PCSpec::new(8, 32, s);
+
+    // コンパイル時定数
+    const PI: f64 = 3.14159265358979323846264338327950288f64;
+    println!("{PI}");
+    println!("{}", std::f64::consts::PI);
+
+    // 静的変数
+    static A: u32 = 100;
+    static mut B: u32 = 200;
 }
 
 // fn a() -> bool {
