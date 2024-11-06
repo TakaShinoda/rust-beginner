@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 use std::collections::LinkedList;
 
 fn main() {
@@ -203,6 +204,40 @@ fn main() {
     // 3 に対応する値への不変参照を取得
     if let Some(vale) = m.get(&3) {
         println!("{vale}");
+    }
+
+    let mut s = BTreeSet::new();
+    s.insert(100);
+    s.insert(400);
+    s.insert(6);
+    s.insert(1);
+
+    // セットに対して、iter() を実行し、イテレーターを返す
+    // そのイテレーターに対して for を実行する
+    for n in s.iter() {
+        println!("{n}"); // BTreeSet は要素をソートして保持する
+    }
+
+    let mut v = Vec::new();
+    v.push(10);
+    v.push(5);
+
+    let mut s = BTreeSet::new();
+    s.insert(100);
+    s.insert(400);
+
+    let it = v.iter().chain(s.iter()); // イテレーターを連結
+    for n in it.clone().map(|n| n * 2) {
+        println!("{n}");
+    }
+
+    let total = it.clone().fold(0, |acc, x| acc + x);
+    println!("{total}");
+
+    let list: LinkedList<_> = it.filter(|n| *n % 2 == 0).collect();
+
+    for (n, m) in v.iter().zip(s.iter()) {
+        println!("({n}, {m})");
     }
 }
 
