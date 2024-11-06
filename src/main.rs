@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use std::collections::LinkedList;
 
 fn main() {
@@ -188,6 +189,21 @@ fn main() {
     list1.append(&mut list2); // list1 == [0, 1, 2, 100, 200, 300]、list2 == []
 
     list1.push_front(-10);
+
+    let mut m = BTreeMap::new();
+    m.insert(1, "apple"); // キーとバリューのペアを挿入
+    m.insert(2, "orange");
+    m.insert(3, "banana");
+
+    // 2 に対応する値を削除
+    if let Some(old) = m.remove(&2) {
+        println!("{old}");
+    }
+
+    // 3 に対応する値への不変参照を取得
+    if let Some(vale) = m.get(&3) {
+        println!("{vale}");
+    }
 }
 
 // fn a() -> bool {
