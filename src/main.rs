@@ -288,10 +288,24 @@ fn main() {
     // let d = a;
 
     // プリミティブ型は消費されない
-    let a = 10;
-    let b = 20;
-    let c = a + b;
-    let d = a * b;
+    // let a = 10;
+    // let b = 20;
+    // let c = a + b;
+    // let d = a * b;
+
+    let a: i32 = 10;
+    let b: &i32 = &a;
+
+    square(b);
+
+    Foo { x: &a };
+
+    let mut x = 10;
+    {
+        let y = 20;
+        add2(&mut x, &y);
+    }
+    println!("{x}");
 }
 
 // fn a() -> bool {
@@ -540,3 +554,17 @@ fn burn(_h2_1: H2, _h2_2: H2, _o2: O2) -> (H2O, H2O) {
 }
 
 struct Coin {}
+
+// ライフタイムを取る関数
+fn square<'a>(x: &'a i32) -> i32 {
+    x * x
+}
+
+// 参照を持つ構造体
+struct Foo<'a> {
+    x: &'a i32,
+}
+
+fn add2<'a>(x: &'a mut i32, y: &'a i32) {
+    *x += *y
+}
