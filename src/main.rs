@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 use std::collections::LinkedList;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 fn main() {
     // let x: i32 = 10;
@@ -311,6 +311,23 @@ fn main() {
     let v = Arc::new(vec![1, 2, 3]); // 参照カウント1
     let w = v.clone(); // 参照カウント2
     let z = v.clone(); // 参照カウント3
+
+    let x = Arc::new(Mutex::new(100_000)); // Mutex 型の値を生成、引数には共有リソース
+    let x2 = x.clone(); // 参照カウンタをインクリメント
+
+    let h1 = std::thread::spawn(move || {
+        // スレッド生成
+        let mut guard = x.lock().unwrap();
+        *guard -= 20_000; // ガードを参照して保護対象データにアクセス
+    });
+
+    let h2 = std::thread::spawn(move || {
+        let mut guard = x2.lock().unwrap();
+        *guard -= 30_000;
+    });
+
+    h1.join().unwrap();
+    h2.join().unwrap();
 }
 
 // fn a() -> bool {
