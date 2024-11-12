@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 use std::collections::LinkedList;
+use std::sync::Arc;
 
 fn main() {
     // let x: i32 = 10;
@@ -306,6 +307,10 @@ fn main() {
         add2(&mut x, &y);
     }
     println!("{x}");
+
+    let v = Arc::new(vec![1, 2, 3]); // 参照カウント1
+    let w = v.clone(); // 参照カウント2
+    let z = v.clone(); // 参照カウント3
 }
 
 // fn a() -> bool {
