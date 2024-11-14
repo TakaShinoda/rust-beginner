@@ -2,6 +2,7 @@ use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 use std::collections::LinkedList;
 use std::fmt::{Display, Formatter};
+use std::iter::Iterator;
 use std::sync::{Arc, Mutex};
 
 fn main() {
@@ -335,6 +336,20 @@ fn main() {
         img: 4.0,
     };
     println!("{n}");
+
+    // [2, 1, 0] というリストを生成
+    let list = List::new().cons(0).cons(1).cons(2);
+
+    for x in list.iter() {
+        println!("{x}");
+    }
+
+    println!();
+
+    let mut it = list.iter();
+    println!("{:?}", it.next().unwrap());
+    println!("{:?}", it.next().unwrap());
+    println!("{:?}", it.next().unwrap());
 }
 
 // fn a() -> bool {
@@ -609,5 +624,50 @@ struct ImaginaryNumber {
 impl Display for ImaginaryNumber {
     fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
         write!(f, "{} + {}i", self.real, self.img)
+    }
+}
+
+// 不変イテレーターを返す型
+struct ListIter<'a, T> {
+    elm: &'a List<T>,
+}
+
+impl<'a, T> Iterator for ListIter<'a, T> {
+    type Item = &'a T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.elm {
+            List::Node { data, next } => {
+                self.elm = next;
+                Some(data)
+            }
+            List::Nil => None,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+enum List<T> {
+    Node { data: T, next: Box<List<T>> },
+    Nil,
+}
+
+// impl<T> List<T> : ジェネリクス型の impl
+impl<T> List<T> {
+    fn new() -> List<T> {
+        List::Nil
+    }
+
+    // リストを消費して、そのリストの先頭に引数のdataを追加したリストを返す
+    fn cons(self, data: T) -> List<T> {
+        List::Node {
+            data,
+            next: Box::new(self),
+        }
+    }
+
+    // 不変イテレーターを返す
+    fn iter<'a>(&'a self) -> ListIter<'a, T> {
+        ListIter { elm: self }
     }
 }
