@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 use std::collections::LinkedList;
+use std::fmt::{Display, Formatter};
 use std::sync::{Arc, Mutex};
 
 fn main() {
@@ -328,6 +329,12 @@ fn main() {
 
     h1.join().unwrap();
     h2.join().unwrap();
+
+    let n = ImaginaryNumber {
+        real: 3.0,
+        img: 4.0,
+    };
+    println!("{n}");
 }
 
 // fn a() -> bool {
@@ -589,4 +596,18 @@ struct Foo<'a> {
 
 fn add2<'a>(x: &'a mut i32, y: &'a i32) {
     *x += *y
+}
+
+// 虚数を表す型
+struct ImaginaryNumber {
+    real: f64,
+    img: f64,
+}
+
+// 虚数を表示するため、Display トレイトを実装
+// ImaginaryNumber 型に対して Display トレイトを実装することを示す
+impl Display for ImaginaryNumber {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
+        write!(f, "{} + {}i", self.real, self.img)
+    }
 }
