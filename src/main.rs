@@ -5,6 +5,7 @@ use std::collections::LinkedList;
 use std::fmt::{Display, Formatter};
 use std::iter::Iterator;
 use std::sync::{Arc, Mutex};
+use std::{fs::File, io::prelude::*, path::Path};
 
 fn main() {
     // let x: i32 = 10;
@@ -369,16 +370,35 @@ fn main() {
     let msgpack = rmp_serde::to_vec(&list).unwrap();
     println!("MessagePack: {} bytes", msgpack.len());
 
-    // JSON にデシリアライズ
+    // JSON からデシリアライズ
     let list = serde_json::from_str::<List<i32>>(&js).unwrap();
     println!("{:?}", list);
 
-    // YAML にデシリアライズ
+    // YAML からデシリアライズ
     let list = serde_yml::from_str::<List<i32>>(&yml).unwrap();
     println!("{:?}", list);
 
-    // MessagePack にデシリアライズ
+    // MessagePack からデシリアライズ
     let list = rmp_serde::from_slice::<List<i32>>(&msgpack).unwrap();
+    println!("{:?}", list);
+
+    // ファイルへ書き出し
+    let path = Path::new("test.yml");
+
+    // 新規ファイルうを生成
+    let mut f = File::create(path).unwrap();
+    f.write_all(yml.as_bytes()).unwrap();
+
+    // ファイルから YAML 読み出し
+    let path = Path::new("test.yml");
+
+    // 既存のファイルをオープン
+    let mut f = File::open(path).unwrap();
+    let mut yml = String::new();
+    f.read_to_string(&mut yml).unwrap();
+
+    // YAML からデシリアライズ
+    let list = serde_yml::from_str::<List<i32>>(&yml).unwrap();
     println!("{:?}", list);
 }
 
