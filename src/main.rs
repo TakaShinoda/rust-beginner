@@ -1,3 +1,4 @@
+use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 use std::collections::LinkedList;
@@ -338,18 +339,47 @@ fn main() {
     println!("{n}");
 
     // [2, 1, 0] というリストを生成
+    // let list = List::new().cons(0).cons(1).cons(2);
+
+    // for x in list.iter() {
+    //     println!("{x}");
+    // }
+
+    // println!();
+
+    // let mut it = list.iter();
+    // println!("{:?}", it.next().unwrap());
+    // println!("{:?}", it.next().unwrap());
+    // println!("{:?}", it.next().unwrap());
+
+    // リストを作成
     let list = List::new().cons(0).cons(1).cons(2);
 
-    for x in list.iter() {
-        println!("{x}");
-    }
+    // JSON にシリアライズ
+    let js = serde_json::to_string(&list).unwrap();
+    println!("JSON: {} bytes", js.len());
+    println!("{js}");
 
-    println!();
+    // YAML にシリアライズ
+    let yml = serde_yml::to_string(&list).unwrap();
+    println!("YAML: {} bytes", yml.len());
+    println!("{yml}");
 
-    let mut it = list.iter();
-    println!("{:?}", it.next().unwrap());
-    println!("{:?}", it.next().unwrap());
-    println!("{:?}", it.next().unwrap());
+    // MessagePack にシリアライズ
+    let msgpack = rmp_serde::to_vec(&list).unwrap();
+    println!("MessagePack: {} bytes", msgpack.len());
+
+    // JSON にデシリアライズ
+    let list = serde_json::from_str::<List<i32>>(&js).unwrap();
+    println!("{:?}", list);
+
+    // YAML にデシリアライズ
+    let list = serde_yml::from_str::<List<i32>>(&yml).unwrap();
+    println!("{:?}", list);
+
+    // MessagePack にデシリアライズ
+    let list = rmp_serde::from_slice::<List<i32>>(&msgpack).unwrap();
+    println!("{:?}", list);
 }
 
 // fn a() -> bool {
@@ -646,7 +676,7 @@ impl<'a, T> Iterator for ListIter<'a, T> {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 enum List<T> {
     Node { data: T, next: Box<List<T>> },
     Nil,
