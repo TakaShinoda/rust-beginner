@@ -4,6 +4,7 @@ use std::collections::BTreeSet;
 use std::collections::LinkedList;
 use std::fmt::{Display, Formatter};
 use std::iter::Iterator;
+use std::ops::Mul;
 use std::sync::{Arc, Mutex};
 use std::{fs::File, io::prelude::*, path::Path};
 
@@ -400,6 +401,12 @@ fn main() {
     // YAML からデシリアライズ
     let list = serde_yml::from_str::<List<i32>>(&yml).unwrap();
     println!("{:?}", list);
+
+    let n = square2(4);
+    println!("{n}");
+
+    let m = square3(5);
+    println!("{m}");
 }
 
 // fn a() -> bool {
@@ -720,4 +727,20 @@ impl<T> List<T> {
     fn iter<'a>(&'a self) -> ListIter<'a, T> {
         ListIter { elm: self }
     }
+}
+
+// トレイト制約
+// T は std::ops::Mul トレイトと、Copy トレイトを実装していなければならない
+// 複数のトレイト制約はプラス演算子を用いる
+fn square2<T>(x: T) -> T
+where
+    T: Mul<Output = T> + Copy,
+{
+    x * x
+}
+
+// トレイト制約
+// where を用いない用いない定義
+fn square3<T: Mul<Output = T> + Copy>(x: T) -> T {
+    x * x
 }
