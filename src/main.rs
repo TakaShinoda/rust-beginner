@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 use std::collections::LinkedList;
+use std::error::Error;
 use std::fmt::{Display, Formatter};
 use std::iter::Iterator;
 use std::ops::Mul;
@@ -407,6 +408,17 @@ fn main() {
 
     let m = square3(5);
     println!("{m}");
+
+    let bar = Bar;
+    let buzz = Buzz;
+
+    // 静的ディスパッチ
+    call_foo_static(&bar);
+    call_foo_static(&buzz);
+
+    // 動的ディスパッチ
+    call_foo_dynamic(&bar);
+    call_foo_dynamic(&buzz);
 }
 
 // fn a() -> bool {
@@ -743,4 +755,73 @@ where
 // where を用いない用いない定義
 fn square3<T: Mul<Output = T> + Copy>(x: T) -> T {
     x * x
+}
+
+trait Fooo {
+    fn foo(&self);
+}
+
+struct Bar;
+impl Fooo for Bar {
+    fn foo(&self) {
+        println!("Bar::foo")
+    }
+}
+
+struct Buzz;
+impl Fooo for Buzz {
+    fn foo(&self) {
+        println!("Buzz::foo")
+    }
+}
+
+// コンパイル時に T が決定される
+fn call_foo_static<T: Fooo>(arg: &T) {
+    arg.foo();
+}
+
+// 実行時に呼び出し先が決定される
+// 参照に dyn キーワードをつける
+fn call_foo_dynamic(arg: &dyn Fooo) {
+    arg.foo();
+}
+
+// エラーA
+#[derive(Debug)]
+struct ErrorA;
+
+impl Display for ErrorA {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ErrorA")
+    }
+}
+
+// Error を　ErrorA に実装
+impl Error for ErrorA {}
+
+#[derive(Debug)]
+struct ErrorB;
+
+impl Display for ErrorB {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ErrorB")
+    }
+}
+
+// Error を　ErrorB に実装
+impl Error for ErrorB {}
+
+fn error_a() -> Result<(), ErrorA> {
+    Err(ErrorA)
+}
+
+fn error_b() -> Result<(), ErrorB> {
+    Err(ErrorB)
+}
+
+fn error_ab() -> Result<(), Box<dyn std::error::Error>> {
+    // ? 演算子で Box 型に変換
+    error_a()?;
+    error_b()?;
+    Ok(())
 }
