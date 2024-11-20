@@ -426,6 +426,9 @@ fn main() {
     };
 
     print_house_info(&my_house);
+
+    let f = closure();
+    f(10);
 }
 
 // fn a() -> bool {
@@ -868,3 +871,8 @@ impl Person for MyHouse {
 }
 
 impl House for MyHouse {}
+
+// impl T {}: T というトレイトを実装した何らかの型が存在する
+fn closure() -> impl Fn(i32) -> i32 {
+    |x| x * x
+}
