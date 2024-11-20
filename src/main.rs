@@ -419,6 +419,13 @@ fn main() {
     // 動的ディスパッチ
     call_foo_dynamic(&bar);
     call_foo_dynamic(&buzz);
+
+    let my_house = MyHouse {
+        owner: "かぐや姫".to_string(),
+        address: "ムーン".to_string(),
+    };
+
+    print_house_info(&my_house);
 }
 
 // fn a() -> bool {
@@ -825,3 +832,39 @@ fn error_ab() -> Result<(), Box<dyn std::error::Error>> {
     error_b()?;
     Ok(())
 }
+
+trait Lacation {
+    fn address(&self) -> &str;
+}
+
+trait Person {
+    fn name(&self) -> &str;
+}
+
+// Location と Person は House のスーパートレイト
+// House トレイトを実装するには、Lacation と Person というトレイトを実装しなければならない
+trait House: Lacation + Person {}
+
+fn print_house_info(house: &dyn House) {
+    println!("所有者: {}", house.name());
+    println!("住所: {}", house.address());
+}
+
+struct MyHouse {
+    owner: String,
+    address: String,
+}
+
+impl Lacation for MyHouse {
+    fn address(&self) -> &str {
+        &self.address
+    }
+}
+
+impl Person for MyHouse {
+    fn name(&self) -> &str {
+        &self.owner
+    }
+}
+
+impl House for MyHouse {}
