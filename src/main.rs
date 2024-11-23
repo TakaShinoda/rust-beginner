@@ -9,6 +9,9 @@ use std::ops::Mul;
 use std::sync::{Arc, Mutex};
 use std::{fs::File, io::prelude::*, path::Path};
 
+mod a;
+mod b;
+
 fn main() {
     // let x: i32 = 10;
     // let y = 20;
