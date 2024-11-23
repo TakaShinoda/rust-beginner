@@ -1,0 +1,8 @@
+[package]
+name = "lib_user"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+my_great_lib = { path = "../my_great_lib" }
+# my_great_lib = { git = "git リポジトリ URL" }
